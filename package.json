@@ -1,19 +1,16 @@
 {
   "name": "react-dialog-manager",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "files": [
-    "dist",
-    "index.d.ts"
+    "dist"
   ],
-  "main": "./dist/counter.umd.cjs",
-  "module": "./dist/counter.js",
-  "types": "./index.d.ts",
+  "main": "./dist/react-dialog-manager.umd.cjs",
+  "module": "./dist/react-dialog-manager.js",
   "exports": {
-    "types": "./index.d.ts",
-    "import": "./dist/counter.js",
-    "require": "./dist/counter.umd.cjs"
+    "import": "./dist/react-dialog-manager.js",
+    "require": "./dist/react-dialog-manager.umd.cjs"
   },
   "scripts": {
     "dev": "vite",
@@ -27,7 +24,7 @@
     "vite": "^5.2.10"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   }
 }

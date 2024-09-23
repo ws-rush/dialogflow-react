@@ -6,8 +6,11 @@ export default defineConfig({
   build: {
     lib: {
       entry: './lib/main.ts',
-      name: 'Counter',
-      fileName: 'counter'
+      name: 'ReactDialogManager',
+      fileName: 'react-dialog-manager'
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom', 'react/jsx-runtime']
     }
   }
 })

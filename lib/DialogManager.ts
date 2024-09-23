@@ -1,4 +1,4 @@
-import { createStore } from './store';
+import { createStore } from '../lib/store';
 
 
 export type ComponentHolder = { Component: () => JSX.Element; props: any } | null

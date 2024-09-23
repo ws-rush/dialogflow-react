@@ -1,9 +1,10 @@
-export function setupCounter(element: HTMLButtonElement) {
-  let counter = 0
-  const setCounter = (count: number) => {
-    counter = count
-    element.innerHTML = `count is ${counter}`
-  }
-  element.addEventListener('click', () => setCounter(++counter))
-  setCounter(0)
-}
+export { createStore, type Listener } from './store'
+export {
+  createDialogManager,
+  type ComponentHolder,
+  type Resolver,
+  type DialogStore,
+  type Manager,
+} from './DialogManager'
+export { DialogProvider, type Props as DialogProviderProps } from './DialogProvider'
+export { DialogContext, useDialog, type DialogContextType } from './DialogContext'
