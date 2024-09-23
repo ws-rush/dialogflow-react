@@ -8,12 +8,10 @@ A lightweight and flexible React library for managing dialogs and modals in your
 ## Table of Contents
 
 - [Features](#features)
+- [Usage](#usage)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [API Overview](#api-overview)
-- [Usage Examples](#usage-examples)
-  - [Basic Confirmation Dialog](#basic-confirmation-dialog)
-  - [Custom Dialog with Return Data](#custom-dialog-with-return-data)
 - [TypeScript Support](#typescript-support)
 - [Contributing](#contributing)
 - [License](#license)
@@ -25,6 +23,11 @@ A lightweight and flexible React library for managing dialogs and modals in your
 - **Flexible**: Works with any dialog or modal component, including third-party UI libraries.
 - **TypeScript Ready**: Written in TypeScript with complete type definitions.
 - **No Dependencies**: Minimal and focuses only on dialog management without extra bloat.
+
+## Usage
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/vitejs-vite-652gmg)
+
 
 ## Installation
 
@@ -58,7 +61,6 @@ import { createDialogflow } from 'dialogflow-react';
 export const dialogflow = createDialogflow();
 ```
 
-
 ### 2. Wrap Your App with `DialogProvider`
 
 Use the `DialogProvider` component to make dialog functions available throughout your app via React Context.
@@ -84,6 +86,8 @@ document.getElementById('root')
 ### 3. Create Dialog Components
 
 Your dialog components can be regular React components that use the `useDialog` hook to close themselves.
+
+>in real world build your dialogs with [React Portals](https://react.dev/reference/react-dom/createPortal), or use dialogs from any components library.
 
 ```tsx
 // MyDialogComponent.tsx
@@ -207,167 +211,6 @@ const { open, close } = useDialog();
 
   - `result` (optional): The result to pass back to the caller of `open`.
 
-## Usage Examples
-
-### Basic Confirmation Dialog
-
-#### 1. Create a Confirmation Dialog Component
-
-```tsx
-// ConfirmationDialog.tsx
-import React from 'react';
-import { useDialog } from 'dialogflow-react';
-
-interface ConfirmationDialogProps {
-title: string;
-message: string;
-}
-
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ title, message }) => {
-const { close } = useDialog();
-
-const handleConfirm = () => {
-close(true);
-};
-
-const handleCancel = () => {
-close(false);
-};
-
-return (
-<div className="dialog-overlay">
-<div className="dialog-content">
-<h2>{title}</h2>
-<p>{message}</p>
-<button onClick={handleConfirm}>Confirm</button>
-<button onClick={handleCancel}>Cancel</button>
-</div>
-</div>
-);
-};
-
-export default ConfirmationDialog;
-```
-
-
-#### 2. Use the Dialog in a Component
-
-```tsx
-// DeleteButton.tsx
-import React from 'react';
-import { useDialog } from 'dialogflow-react';
-import ConfirmationDialog from './ConfirmationDialog';
-
-const DeleteButton: React.FC = () => {
-const { open } = useDialog();
-
-const handleDelete = async () => {
-const confirmed = await open(ConfirmationDialog, {
-title: 'Confirm Delete',
-message: 'Are you sure you want to delete this item?',
-});
-
-if (confirmed) {
-  // Perform the delete action
-  console.log('Item deleted');
-} else {
-  console.log('Delete canceled');
-}
-};
-
-return (
-<button onClick={handleDelete}>Delete Item</button>
-);
-};
-
-export default DeleteButton;
-```
-
-
-### Custom Dialog with Return Data
-
-You can also have dialogs that return data back to the calling component.
-
-#### 1. Create an Input Dialog Component
-
-```tsx
-// InputDialog.tsx
-import React, { useState } from 'react';
-import { useDialog } from 'dialogflow-react';
-
-interface InputDialogProps {
-prompt: string;
-}
-
-const InputDialog: React.FC<InputDialogProps> = ({ prompt }) => {
-const { close } = useDialog();
-const [inputValue, setInputValue] = useState('');
-
-const handleSubmit = () => {
-close(inputValue);
-};
-
-const handleCancel = () => {
-close(null);
-};
-
-return (
-<div className="dialog-overlay">
-<div className="dialog-content">
-<p>{prompt}</p>
-<input
-type="text"
-value={inputValue}
-onChange={(e) => setInputValue(e.target.value)}
-/>
-<button onClick={handleSubmit}>OK</button>
-<button onClick={handleCancel}>Cancel</button>
-</div>
-</div>
-);
-};
-
-export default InputDialog;
-```
-
-
-#### 2. Use the Input Dialog to Get User Input
-
-```tsx
-// UsernameForm.tsx
-import React, { useState } from 'react';
-import { useDialog } from 'dialogflow-react';
-import InputDialog from './InputDialog';
-
-const UsernameForm: React.FC = () => {
-const { open } = useDialog();
-const [username, setUsername] = useState('');
-
-const handleChangeUsername = async () => {
-const newUsername = await open(InputDialog, {
-prompt: 'Enter your new username:',
-});
-
-if (newUsername !== null) {
-  setUsername(newUsername);
-  console.log('Username updated to:', newUsername);
-} else {
-  console.log('Username change canceled');
-}
-};
-
-return (
-<div>
-<p>Current Username: {username || 'Not set'}</p>
-<button onClick={handleChangeUsername}>Change Username</button>
-</div>
-);
-};
-
-export default UsernameForm;
-```
-
-
 ## TypeScript Support
 
 `dialogflow-react` is built with TypeScript, providing full type safety and autocompletion in compatible editors.
@@ -396,79 +239,6 @@ MIT License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-## Additional Information
-
-### Styling the Dialogs
-
-The library does not impose any styles, allowing you to style your dialogs as needed. Use your preferred method (CSS modules, styled-components, etc.) to style the dialog components.
-
-### Using with UI Libraries
-
-You can integrate `dialogflow-react` with UI libraries like Material-UI, Ant Design, or Bootstrap.
-
-#### Example with Material-UI
-
-```tsx
-// MuiDialog.tsx
-import React from 'react';
-import { useDialog } from 'dialogflow-react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-
-interface MuiDialogProps {
-title: string;
-}
-
-const MuiDialog: React.FC<MuiDialogProps> = ({ title }) => {
-const { close } = useDialog();
-
-const handleClose = () => {
-close();
-};
-
-return (
-<Dialog open onClose={handleClose}>
-<DialogTitle>{title}</DialogTitle>
-<DialogActions>
-<Button onClick={handleClose} color="primary">
-Close
-</Button>
-</DialogActions>
-</Dialog>
-);
-};
-
-export default MuiDialog;
-```
-
-
-#### Opening the Material-UI Dialog
-
-```tsx
-// App.tsx
-import React from 'react';
-import { useDialog } from 'dialogflow-react';
-import MuiDialog from './MuiDialog';
-
-const App: React.FC = () => {
-const { open } = useDialog();
-
-const handleOpenMuiDialog = () => {
-open(MuiDialog, { title: 'Material-UI Dialog' });
-};
-
-return (
-<div>
-<button onClick={handleOpenMuiDialog}>Open MUI Dialog</button>
-</div>
-);
-};
-
-export default App;
-```
 
 
 ## Frequently Asked Questions
