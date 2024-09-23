@@ -1,7 +1,7 @@
 
 A lightweight and flexible React library for managing dialogs and modals in your React applications.
 
-# React Dialog Manager
+# Dialogflow React
 
 [![Free Palestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/banner-support.svg)](https://stand-with-palestine.org)
 
@@ -45,7 +45,7 @@ yarn add dialogflow-react
 
 ## Getting Started
 
-To start using React Dialog Manager in your project, follow these steps:
+To start using `dialogflow-react` in your project, follow these steps:
 
 ### 1. Create a Dialog Manager Instance
 
@@ -370,7 +370,7 @@ export default UsernameForm;
 
 ## TypeScript Support
 
-React Dialog Manager is built with TypeScript, providing full type safety and autocompletion in compatible editors.
+`dialogflow-react` is built with TypeScript, providing full type safety and autocompletion in compatible editors.
 
 
 
@@ -405,7 +405,7 @@ The library does not impose any styles, allowing you to style your dialogs as ne
 
 ### Using with UI Libraries
 
-You can integrate React Dialog Manager with UI libraries like Material-UI, Ant Design, or Bootstrap.
+You can integrate `dialogflow-react` with UI libraries like Material-UI, Ant Design, or Bootstrap.
 
 #### Example with Material-UI
 
