@@ -1,15 +1,15 @@
 {
-  "name": "react-dialog-manager",
+  "name": "dialogflow-react",
   "version": "0.0.1",
   "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/react-dialog-manager.umd.cjs",
-  "module": "./dist/react-dialog-manager.js",
+  "main": "./dist/dialogflow-react.umd.cjs",
+  "module": "./dist/dialogflow-react.js",
   "exports": {
-    "import": "./dist/react-dialog-manager.js",
-    "require": "./dist/react-dialog-manager.umd.cjs"
+    "import": "./dist/dialogflow-react.js",
+    "require": "./dist/dialogflow-react.umd.cjs"
   },
   "scripts": {
     "dev": "vite",

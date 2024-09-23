@@ -32,13 +32,13 @@ Install the library using pnpm, npm or yarn:
 
 ```bash
 ## using pnpm 
-pnpm add react-dialog-manager
+pnpm add dialogflow-react
 
 ## using npm
-npm install react-dialog-manager
+npm install dialogflow-react
 
 ## using yarn
-yarn add react-dialog-manager
+yarn add dialogflow-react
 
 ```
 
@@ -53,7 +53,7 @@ Create a dialog manager instance that will handle dialog states throughout your 
 
 ```ts
 // dialogManager.ts
-import { createDialogManager } from 'react-dialog-manager';
+import { createDialogManager } from 'dialogflow-react';
 
 export const dialogManager = createDialogManager();
 ```
@@ -68,7 +68,7 @@ Use the `DialogProvider` component to make dialog functions available throughout
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { DialogProvider } from 'react-dialog-manager';
+import { DialogProvider } from 'dialogflow-react';
 import { dialogManager } from './dialogManager';
 
 ReactDOM.render(
@@ -88,7 +88,7 @@ Your dialog components can be regular React components that use the `useDialog` 
 ```tsx
 // MyDialogComponent.tsx
 import React from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 
 interface MyDialogProps {
     message: string;
@@ -119,7 +119,7 @@ Import and use the `useDialog` hook in your components to open dialogs.
 ```tsx
 // SomeComponent.tsx
 import React from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 
 export default function SomeComponent() {
     const { open } = useDialog();
@@ -163,7 +163,7 @@ export default function SomeComponent() {
 Creates a dialog manager that maintains the dialog state.
 
 ```ts
-import { createDialogManager } from 'react-dialog-manager';
+import { createDialogManager } from 'dialogflow-react';
 
 const dialogManager = createDialogManager();
 ```
@@ -216,7 +216,7 @@ const { open, close } = useDialog();
 ```tsx
 // ConfirmationDialog.tsx
 import React from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 
 interface ConfirmationDialogProps {
 title: string;
@@ -255,7 +255,7 @@ export default ConfirmationDialog;
 ```tsx
 // DeleteButton.tsx
 import React from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 import ConfirmationDialog from './ConfirmationDialog';
 
 const DeleteButton: React.FC = () => {
@@ -293,7 +293,7 @@ You can also have dialogs that return data back to the calling component.
 ```tsx
 // InputDialog.tsx
 import React, { useState } from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 
 interface InputDialogProps {
 prompt: string;
@@ -336,7 +336,7 @@ export default InputDialog;
 ```tsx
 // UsernameForm.tsx
 import React, { useState } from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 import InputDialog from './InputDialog';
 
 const UsernameForm: React.FC = () => {
@@ -412,7 +412,7 @@ You can integrate React Dialog Manager with UI libraries like Material-UI, Ant D
 ```tsx
 // MuiDialog.tsx
 import React from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -450,7 +450,7 @@ export default MuiDialog;
 ```tsx
 // App.tsx
 import React from 'react';
-import { useDialog } from 'react-dialog-manager';
+import { useDialog } from 'dialogflow-react';
 import MuiDialog from './MuiDialog';
 
 const App: React.FC = () => {
@@ -497,7 +497,7 @@ You can manage errors within your dialog component as you would in any React com
 
 This library was inspired by the need for a simple, promise-based dialog management solution in React applications without coupling to any specific UI library.
 
-If you find this library helpful, please give it a star on [GitHub](https://github.com/ws-rush/react-dialog-manager)!
+If you find this library helpful, please give it a star on [GitHub](https://github.com/ws-rush/dialogflow-react)!
 
 ---
 
