@@ -9,7 +9,7 @@ export type DialogStore = {
   resolver: Resolver
 }
 
-export function createDialogManager() {
+export function createDialogflow() {
   const store = createStore<DialogStore>({
     dialog: null,
     resolver: null
@@ -41,4 +41,4 @@ export function createDialogManager() {
   }
 }
 
-export type Manager = ReturnType<typeof createDialogManager>
+export type Manager = ReturnType<typeof createDialogflow>

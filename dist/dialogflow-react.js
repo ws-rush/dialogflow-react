@@ -45,7 +45,7 @@ function h({ children: t, manager: e }) {
 export {
   r as DialogContext,
   h as DialogProvider,
-  g as createDialogManager,
+  g as createDialogflow,
   d as createStore,
   x as useDialog
 };

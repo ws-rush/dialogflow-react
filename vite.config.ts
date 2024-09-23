@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: './lib/main.ts',
-      name: 'ReactDialogManager',
+      name: 'DialogflowReact',
       fileName: 'dialogflow-react'
     },
     rollupOptions: {

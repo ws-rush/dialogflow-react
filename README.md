@@ -52,10 +52,10 @@ To start using `dialogflow-react` in your project, follow these steps:
 Create a dialog manager instance that will handle dialog states throughout your app.
 
 ```ts
-// dialogManager.ts
-import { createDialogManager } from 'dialogflow-react';
+// dialogflow.ts
+import { createDialogflow } from 'dialogflow-react';
 
-export const dialogManager = createDialogManager();
+export const dialogflow = createDialogflow();
 ```
 
 
@@ -69,11 +69,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { DialogProvider } from 'dialogflow-react';
-import { dialogManager } from './dialogManager';
+import { dialogflow } from './dialogflow';
 
 ReactDOM.render(
     <React.StrictMode>
-        <DialogProvider manager={dialogManager}>
+        <DialogProvider manager={dialogflow}>
             <App />
         </DialogProvider>
     </React.StrictMode>,
@@ -135,18 +135,18 @@ export default function SomeComponent() {
 };
 ```
 
-#### Use `dialogManager` instance 
+#### Use `dialogflow` instance 
 
 
 ```tsx
 // SomeComponent.tsx
 import React from 'react';
-import { dialogManager } from './dialogManager';
+import { dialogflow } from './dialogflow';
 
 export default function SomeComponent() {
 
     const handleOpenDialog = async () => {
-        const result = await dialogManager.open(MyDialogComponent, { message: 'Hello World!' });
+        const result = await dialogflow.open(MyDialogComponent, { message: 'Hello World!' });
         console.log('Dialog closed with result:', result);
     };
 
@@ -158,14 +158,14 @@ export default function SomeComponent() {
 
 ## API Overview
 
-### `createDialogManager`
+### `createDialogflow`
 
 Creates a dialog manager that maintains the dialog state.
 
 ```ts
-import { createDialogManager } from 'dialogflow-react';
+import { createDialogflow } from 'dialogflow-react';
 
-const dialogManager = createDialogManager();
+const dialogflow = createDialogflow();
 ```
 
 
@@ -174,14 +174,14 @@ const dialogManager = createDialogManager();
 A provider component that supplies dialog management functionalities via context.
 
 ```tsx
-<DialogProvider manager={dialogManager}>
+<DialogProvider manager={dialogflow}>
     {children}
 </DialogProvider>
 ```
 
 
 - **Props:**
-  - `manager`: The dialog manager instance created by `createDialogManager`.
+  - `manager`: The dialog manager instance created by `createDialogflow`.
 
 ### `useDialog`
 

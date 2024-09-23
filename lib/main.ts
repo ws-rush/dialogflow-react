@@ -1,6 +1,6 @@
 export { createStore, type Listener } from './store'
 export {
-  createDialogManager,
+  createDialogflow,
   type ComponentHolder,
   type Resolver,
   type DialogStore,
