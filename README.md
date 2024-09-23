@@ -1,12 +1,9 @@
 
 A lightweight and flexible React library for managing dialogs and modals in your React applications.
 
-// free palestine log
-// add open dialogs with dialogManager
-// add diffrent examples in stackblitz
-// support multiple dialogs later 
-
 # React Dialog Manager
+
+[![Free Palestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/banner-support.svg)](https://stand-with-palestine.org)
 
 ## Table of Contents
 
