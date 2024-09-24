@@ -1,36 +1,42 @@
 import { createStore } from '../lib/store';
 
 
-export type ComponentHolder = { Component: () => JSX.Element; props: any } | null
-export type Resolver = ((value: any) => void) | null
+export type ComponentHolder = { Component: () => JSX.Element; props: any }
+export type Resolver = ((value: any) => void)
 
-export type DialogStore = {
+export type DialogEntry = {
   dialog: ComponentHolder;
   resolver: Resolver
 }
 
+export type DialogStore = {
+  dialogs: DialogEntry[]
+}
+
 export function createDialogflow() {
   const store = createStore<DialogStore>({
-    dialog: null,
-    resolver: null
+    dialogs: []
   })
 
   // open dialog
   const open = (Component: () => JSX.Element, props = {}) => {
     return new Promise(resolve => {
-      store.setState({ dialog: { Component, props }, resolver: resolve })
+      const dialogEntry: DialogEntry = {
+        dialog: { Component, props },
+        resolver: resolve,
+      };
+      const { dialogs } = store.getSnapshot();
+      store.setState({ dialogs: [...dialogs, dialogEntry] });
     })
   }
 
   // close dialog
   const close = (result: any) => {
-    const snapshot = store.getSnapshot()
-    if (snapshot.resolver) {
-      snapshot.resolver(result)
-      store.setState({
-        dialog: null,
-        resolver: null
-      })
+    const { dialogs } = store.getSnapshot()
+    if (dialogs.length > 0) {
+      const lastDialogEntry = dialogs[dialogs.length - 1];
+      lastDialogEntry.resolver(result);
+      store.setState({ dialogs: dialogs.slice(0, -1) });
     }
   }
 
