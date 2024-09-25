@@ -49,9 +49,9 @@ function v({ children: i, manager: t }) {
   const { dialogs: n } = x(t.subscribe, t.getSnapshot, t.getSnapshot), o = h(() => ({ open: t.open }), [t.open]);
   return /* @__PURE__ */ u(d.Provider, { value: o, children: [
     i,
-    n.map((s, c) => {
-      const { Component: e, props: r } = s;
-      return /* @__PURE__ */ g(e, { ...r }, c);
+    n.map((s) => {
+      const { Component: c, props: e, id: r } = s;
+      return /* @__PURE__ */ g(c, { ...e }, r);
     })
   ] });
 }

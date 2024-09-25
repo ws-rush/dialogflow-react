@@ -16,9 +16,9 @@ export function DialogProvider({ children, manager }: Props): JSX.Element {
     <DialogContext.Provider value={actions}>
         {children}
         { 
-          dialogs.map((dialogEntry, index) => {
-            const { Component, props } = dialogEntry;
-            return <Component key={index} {...props} />;
+          dialogs.map((dialogEntry) => {
+            const { Component, props, id } = dialogEntry;
+            return <Component key={id} {...props} />;
           }) 
         }
     </DialogContext.Provider>
