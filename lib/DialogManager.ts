@@ -84,6 +84,7 @@ export function createDialogflow() {
 
   return {
     open,
+    register,
     ...store
   }
 }
