@@ -1,64 +1,74 @@
-import { jsxs as u, jsx as g } from "react/jsx-runtime";
-import { createContext as S, useContext as f, useSyncExternalStore as x, useMemo as h } from "react";
-function y(i) {
-  let t = i;
-  const n = /* @__PURE__ */ new Set();
+import { jsxs as f, jsx as S } from "react/jsx-runtime";
+import { createContext as x, useContext as w, useSyncExternalStore as y, useMemo as h } from "react";
+function D(i) {
+  let e = i;
+  const t = /* @__PURE__ */ new Set();
   return {
-    getSnapshot: () => t,
-    setState: (o) => {
-      t = { ...t, ...o };
-      for (const s of n) s(t);
+    getSnapshot: () => e,
+    setState: (s) => {
+      e = { ...e, ...s };
+      for (const l of t) l(e);
     },
-    subscribe: (o) => (n.add(o), () => n.delete(o))
+    subscribe: (s) => (t.add(s), () => t.delete(s))
   };
 }
-function b() {
+function P() {
   let i = 0;
-  const t = y({
+  const e = /* @__PURE__ */ new Map(), t = D({
     dialogs: []
-  }), n = (s, c = {}) => {
-    const e = String(i++);
-    return new Promise((r) => {
-      const l = {
-        id: e,
-        Component: s,
-        resolver: r,
-        props: { ...c, close: (p) => {
-          o(e, p);
-        } }
-      }, { dialogs: a } = t.getSnapshot();
-      t.setState({ dialogs: [...a, l] });
+  }), s = (r, c = {}) => {
+    let o, n;
+    if (typeof r == "string") {
+      if (n = r, o = e.get(n), !o)
+        return Promise.reject(new Error(`No dialog registered with ID "${n}".`));
+    } else if (typeof r == "function")
+      o = r, n = `dialog_${i++}`;
+    else
+      return Promise.reject(new Error("Invalid dialog identifier."));
+    return new Promise((a) => {
+      const d = {
+        id: n,
+        Component: o,
+        resolver: a,
+        props: {
+          ...c,
+          close: (p) => {
+            l(n, p);
+          }
+        }
+      }, { dialogs: u } = t.getSnapshot();
+      t.setState({ dialogs: [...u, d] });
     });
-  }, o = (s, c) => {
-    const { dialogs: e } = t.getSnapshot(), r = e.findIndex((l) => l.id === s);
-    if (r !== -1) {
-      e[r].resolver(c);
-      const a = [...e];
-      a.splice(r, 1), t.setState({ dialogs: a });
+  }, l = (r, c) => {
+    const { dialogs: o } = t.getSnapshot(), n = o.findIndex((a) => a.id === r);
+    if (n !== -1) {
+      o[n].resolver(c);
+      const d = [...o];
+      d.splice(n, 1), t.setState({ dialogs: d });
     }
   };
   return {
-    open: n,
+    open: s,
     ...t
   };
 }
-const d = S({
+const g = x({
   open: async () => null
-}), m = () => f(d);
-function v({ children: i, manager: t }) {
-  const { dialogs: n } = x(t.subscribe, t.getSnapshot, t.getSnapshot), o = h(() => ({ open: t.open }), [t.open]);
-  return /* @__PURE__ */ u(d.Provider, { value: o, children: [
+}), b = () => w(g);
+function j({ children: i, manager: e }) {
+  const { dialogs: t } = y(e.subscribe, e.getSnapshot, e.getSnapshot), s = h(() => ({ open: e.open }), [e.open]);
+  return /* @__PURE__ */ f(g.Provider, { value: s, children: [
     i,
-    n.map((s) => {
-      const { Component: c, props: e, id: r } = s;
-      return /* @__PURE__ */ g(c, { ...e }, r);
+    t.map((l) => {
+      const { Component: r, props: c, id: o } = l;
+      return /* @__PURE__ */ S(r, { ...c }, o);
     })
   ] });
 }
 export {
-  d as DialogContext,
-  v as DialogProvider,
-  b as createDialogflow,
-  y as createStore,
-  m as useDialog
+  g as DialogContext,
+  j as DialogProvider,
+  P as createDialogflow,
+  D as createStore,
+  b as useDialog
 };

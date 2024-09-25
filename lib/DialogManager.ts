@@ -15,28 +15,58 @@ export type DialogStore = {
 
 export function createDialogflow() {
   let dialogIdCounter = 0;
+  const dialogRegistry: Map<string, () => JSX.Element> = new Map();
 
   const store = createStore<DialogStore>({
     dialogs: []
   })
 
-  // open dialog
-  const open = (Component: () => JSX.Element, props = {}) => {
-    const dialogId = String(dialogIdCounter++)
+  // Register a dialog component with a unique ID
+  const register = (Component: () => JSX.Element, dialogId: string) => {
+    if (dialogRegistry.has(dialogId)) {
+      console.warn(`Dialog with ID "${dialogId}" is already registered. Overwriting.`);
+    }
+    dialogRegistry.set(dialogId, Component);
+  };
 
-    return new Promise(resolver => {
+  // Open dialog by Component or by dialog ID
+  const open = (
+    ComponentOrId: (() => JSX.Element) | string,
+    props: Record<string, any> = {}
+  ): Promise<any> => {
+    let Component: (() => JSX.Element) | undefined;
+    let dialogId: string;
+
+    if (typeof ComponentOrId === 'string') {
+      dialogId = ComponentOrId;
+      Component = dialogRegistry.get(dialogId);
+      if (!Component) {
+        return Promise.reject(new Error(`No dialog registered with ID "${dialogId}".`));
+      }
+    } else if (typeof ComponentOrId === 'function') {
+      Component = ComponentOrId;
+      dialogId = `dialog_${dialogIdCounter++}`;
+    } else {
+      return Promise.reject(new Error('Invalid dialog identifier.'));
+    }
+
+    return new Promise((resolver) => {
       const dialogEntry: DialogEntry = {
         id: dialogId,
         Component,
         resolver,
-        props: { ...props, close: (result?: any) => {
-          close(dialogId, result)
-        } }
+        props: {
+          ...props,
+          close: (result?: any) => {
+            close(dialogId, result);
+          },
+        },
       };
+
       const { dialogs } = store.getSnapshot();
       store.setState({ dialogs: [...dialogs, dialogEntry] });
-    })
-  }
+    });
+  };
 
   // close dialog
   const close = (id: string, result?: any) => {
