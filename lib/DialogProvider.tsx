@@ -10,14 +10,14 @@ export type Props = {
 export function DialogProvider({ children, manager }: Props): JSX.Element {
   const { dialogs } = useSyncExternalStore(manager.subscribe, manager.getSnapshot, manager.getSnapshot)
 
-  const actions = useMemo(() => ({ close: manager.close, open: manager.open }), [manager.close, manager.open])
+  const actions = useMemo(() => ({ open: manager.open }), [manager.open])
 
   return (
     <DialogContext.Provider value={actions}>
         {children}
         { 
           dialogs.map((dialogEntry, index) => {
-            const { Component, props } = dialogEntry.dialog;
+            const { Component, props } = dialogEntry;
             return <Component key={index} {...props} />;
           }) 
         }

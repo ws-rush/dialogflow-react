@@ -1,54 +1,64 @@
-import { jsxs as a, jsx as u } from "react/jsx-runtime";
-import { createContext as p, useContext as g, useSyncExternalStore as d, useMemo as S } from "react";
-function f(s) {
-  let t = s;
+import { jsxs as u, jsx as g } from "react/jsx-runtime";
+import { createContext as S, useContext as f, useSyncExternalStore as x, useMemo as h } from "react";
+function y(i) {
+  let t = i;
   const n = /* @__PURE__ */ new Set();
   return {
     getSnapshot: () => t,
     setState: (o) => {
       t = { ...t, ...o };
-      for (const e of n) e(t);
+      for (const s of n) s(t);
     },
     subscribe: (o) => (n.add(o), () => n.delete(o))
   };
 }
-function D() {
-  const s = f({
+function b() {
+  let i = 0;
+  const t = y({
     dialogs: []
-  });
+  }), n = (s, c = {}) => {
+    const e = String(i++);
+    return new Promise((r) => {
+      const l = {
+        id: e,
+        Component: s,
+        resolver: r,
+        props: { ...c, close: (p) => {
+          o(e, p);
+        } }
+      }, { dialogs: a } = t.getSnapshot();
+      t.setState({ dialogs: [...a, l] });
+    });
+  }, o = (s, c) => {
+    const { dialogs: e } = t.getSnapshot(), r = e.findIndex((l) => l.id === s);
+    if (r !== -1) {
+      e[r].resolver(c);
+      const a = [...e];
+      a.splice(r, 1), t.setState({ dialogs: a });
+    }
+  };
   return {
-    close: (o) => {
-      const { dialogs: e } = s.getSnapshot();
-      e.length > 0 && (e[e.length - 1].resolver(o), s.setState({ dialogs: e.slice(0, -1) }));
-    },
-    open: (o, e = {}) => new Promise((l) => {
-      const r = {
-        dialog: { Component: o, props: e },
-        resolver: l
-      }, { dialogs: c } = s.getSnapshot();
-      s.setState({ dialogs: [...c, r] });
-    }),
-    ...s
+    open: n,
+    ...t
   };
 }
-const i = p({
-  close: () => null,
+const d = S({
   open: async () => null
-}), v = () => g(i);
-function y({ children: s, manager: t }) {
-  const { dialogs: n } = d(t.subscribe, t.getSnapshot, t.getSnapshot), o = S(() => ({ close: t.close, open: t.open }), [t.close, t.open]);
-  return /* @__PURE__ */ a(i.Provider, { value: o, children: [
-    s,
-    n.map((e, l) => {
-      const { Component: r, props: c } = e.dialog;
-      return /* @__PURE__ */ u(r, { ...c }, l);
+}), m = () => f(d);
+function v({ children: i, manager: t }) {
+  const { dialogs: n } = x(t.subscribe, t.getSnapshot, t.getSnapshot), o = h(() => ({ open: t.open }), [t.open]);
+  return /* @__PURE__ */ u(d.Provider, { value: o, children: [
+    i,
+    n.map((s, c) => {
+      const { Component: e, props: r } = s;
+      return /* @__PURE__ */ g(e, { ...r }, c);
     })
   ] });
 }
 export {
-  i as DialogContext,
-  y as DialogProvider,
-  D as createDialogflow,
-  f as createStore,
-  v as useDialog
+  d as DialogContext,
+  v as DialogProvider,
+  b as createDialogflow,
+  y as createStore,
+  m as useDialog
 };

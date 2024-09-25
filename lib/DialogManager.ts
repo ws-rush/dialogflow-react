@@ -1,12 +1,12 @@
 import { createStore } from '../lib/store';
 
-
-export type ComponentHolder = { Component: () => JSX.Element; props: any }
 export type Resolver = ((value: any) => void)
 
 export type DialogEntry = {
-  dialog: ComponentHolder;
-  resolver: Resolver
+  id: string;
+  Component: () => JSX.Element;
+  resolver: Resolver;
+  props?: any;
 }
 
 export type DialogStore = {
@@ -14,16 +14,24 @@ export type DialogStore = {
 }
 
 export function createDialogflow() {
+  let dialogIdCounter = 0;
+
   const store = createStore<DialogStore>({
     dialogs: []
   })
 
   // open dialog
   const open = (Component: () => JSX.Element, props = {}) => {
-    return new Promise(resolve => {
+    const dialogId = String(dialogIdCounter++)
+
+    return new Promise(resolver => {
       const dialogEntry: DialogEntry = {
-        dialog: { Component, props },
-        resolver: resolve,
+        id: dialogId,
+        Component,
+        resolver,
+        props: { ...props, close: (result?: any) => {
+          close(dialogId, result)
+        } }
       };
       const { dialogs } = store.getSnapshot();
       store.setState({ dialogs: [...dialogs, dialogEntry] });
@@ -31,17 +39,20 @@ export function createDialogflow() {
   }
 
   // close dialog
-  const close = (result: any) => {
+  const close = (id: string, result?: any) => {
     const { dialogs } = store.getSnapshot()
-    if (dialogs.length > 0) {
-      const lastDialogEntry = dialogs[dialogs.length - 1];
-      lastDialogEntry.resolver(result);
-      store.setState({ dialogs: dialogs.slice(0, -1) });
+    const index = dialogs.findIndex((dialog) => dialog.id === id);
+
+    if (index !== -1) {
+      const dialogEntry = dialogs[index];
+      dialogEntry.resolver(result);
+      const newDialogs = [...dialogs];
+      newDialogs.splice(index, 1);
+      store.setState({ dialogs: newDialogs });
     }
   }
 
   return {
-    close,
     open,
     ...store
   }
