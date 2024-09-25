@@ -29,25 +29,45 @@ export function createDialogflow() {
     dialogRegistry.set(dialogId, Component);
   };
 
-  // Open dialog by Component or by dialog ID
-  const open = (
-    ComponentOrId: (() => JSX.Element) | string,
+  // Push a new dialog onto the stack
+  const push = (
+    Component: () => JSX.Element,
     props: Record<string, any> = {}
   ): Promise<any> => {
-    let Component: (() => JSX.Element) | undefined;
-    let dialogId: string;
+    const dialogId = `dialog_${dialogIdCounter++}`;
+    return new Promise((resolver) => {
+      const dialogEntry: DialogEntry = {
+        id: dialogId,
+        Component,
+        resolver,
+        props: {
+          ...props,
+          close: (result?: any) => {
+            close(dialogId, result);
+          },
+        },
+      };
 
-    if (typeof ComponentOrId === 'string') {
-      dialogId = ComponentOrId;
-      Component = dialogRegistry.get(dialogId);
-      if (!Component) {
-        return Promise.reject(new Error(`No dialog registered with ID "${dialogId}".`));
-      }
-    } else if (typeof ComponentOrId === 'function') {
-      Component = ComponentOrId;
-      dialogId = `dialog_${dialogIdCounter++}`;
-    } else {
-      return Promise.reject(new Error('Invalid dialog identifier.'));
+      const { dialogs } = store.getSnapshot();
+      store.setState({ dialogs: [...dialogs, dialogEntry] });
+    });
+  };
+
+  // Open a registered dialog by ID
+  const open = (
+    dialogId: string,
+    props: Record<string, any> = {}
+  ): Promise<any> => {
+    const Component = dialogRegistry.get(dialogId);
+    if (!Component) {
+      return Promise.reject(new Error(`No dialog registered with ID "${dialogId}".`));
+    }
+
+    const { dialogs } = store.getSnapshot();
+    const isAlreadyOpen = dialogs.some(dialog => dialog.id === dialogId);
+    if (isAlreadyOpen) {
+      // return Promise.reject(new Error(`Dialog with ID "${dialogId}" is already open.`));
+      return Promise.resolve();
     }
 
     return new Promise((resolver) => {
@@ -63,7 +83,6 @@ export function createDialogflow() {
         },
       };
 
-      const { dialogs } = store.getSnapshot();
       store.setState({ dialogs: [...dialogs, dialogEntry] });
     });
   };
@@ -83,6 +102,7 @@ export function createDialogflow() {
   }
 
   return {
+    push,
     open,
     register,
     ...store
