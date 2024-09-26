@@ -1,7 +1,6 @@
+# Dialogflow React
 
 A lightweight and flexible React library for managing dialogs and modals in your React applications.
-
-# Dialogflow React
 
 [![Free Palestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/banner-support.svg)](https://stand-with-palestine.org)
 
@@ -15,11 +14,13 @@ A lightweight and flexible React library for managing dialogs and modals in your
 - [TypeScript Support](#typescript-support)
 - [Contributing](#contributing)
 - [License](#license)
+- [Frequently Asked Questions](#frequently-asked-questions)
+- [Acknowledgments](#acknowledgments)
 
 ## Features
 
 - **Simple API**: Open and close dialogs with ease using a minimal API.
-- **Promise-Based**: `open` method returns a promise that resolves when the dialog is closed.
+- **Promise-Based**: `open` and `push` methods return promises that resolve when the dialog is closed.
 - **Flexible**: Works with any dialog or modal component, including third-party UI libraries.
 - **TypeScript Ready**: Written in TypeScript with complete type definitions.
 - **No Dependencies**: Minimal and focuses only on dialog management without extra bloat.
@@ -28,13 +29,12 @@ A lightweight and flexible React library for managing dialogs and modals in your
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/vitejs-vite-652gmg)
 
-
 ## Installation
 
 Install the library using pnpm, npm or yarn:
 
 ```bash
-## using pnpm 
+## using pnpm
 pnpm add dialogflow-react
 
 ## using npm
@@ -42,9 +42,7 @@ npm install dialogflow-react
 
 ## using yarn
 yarn add dialogflow-react
-
 ```
-
 
 ## Getting Started
 
@@ -57,9 +55,14 @@ Create a dialog manager instance that will handle dialog states throughout your 
 ```ts
 // dialogflow.ts
 import { createDialogflow } from 'dialogflow-react';
+import { MyDialogComponent } from 'MyDialogComponent'
 
 export const dialogflow = createDialogflow();
+
+// optional: register dialogs here
+dialogflow.register(MyDialogComponent, 'registered-dialog-id')
 ```
+
 
 ### 2. Wrap Your App with `DialogProvider`
 
@@ -79,85 +82,94 @@ ReactDOM.render(
             <App />
         </DialogProvider>
     </React.StrictMode>,
-document.getElementById('root')
+    document.getElementById('root')
 );
 ```
 
 ### 3. Create Dialog Components
 
-Your dialog components can be regular React components that use the `useDialog` hook to close themselves.
+Your dialog components can be regular React components that accepts `close` function to close themselves.
 
->in real world build your dialogs with [React Portals](https://react.dev/reference/react-dom/createPortal), or use dialogs from any components library.
+>In real-world applications, build your dialogs with [React Portals](https://react.dev/reference/react-dom/createPortal), or use dialogs from any component library.
 
 ```tsx
 // MyDialogComponent.tsx
 import React from 'react';
-import { useDialog } from 'dialogflow-react';
 
 interface MyDialogProps {
     message: string;
+    close: (message: string) => void
 }
 
-export default function MyDialogComponent({ message }) {
-    const { close } = useDialog();
+export default function MyDialogComponent({ message, close }) {
 
-    const handleClose = () => {
-        close('Dialog was closed');
-    };
+const handleClose = () => {
+    close('Dialog was closed');
+};
 
-    return (
-        <div className="dialog">
+return (
+    <div className="dialog">
         <p>{message}</p>
         <button onClick={handleClose}>Close Dialog</button>
-        </div>
-    );
+    </div>
+);
 }
 ```
 
 ### 4. Manage Dialogs
 
-#### Use `useDialog` Hook 
+#### Using `useDialog` Hook 
 
-Import and use the `useDialog` hook in your components to open dialogs.
+Import and use the `useDialog` hook in your components to push or open dialogs.
 
 ```tsx
 // SomeComponent.tsx
 import React from 'react';
 import { useDialog } from 'dialogflow-react';
+import MyDialogComponent from './MyDialogComponent';
 
 export default function SomeComponent() {
-    const { open } = useDialog();
+    const { push, open } = useDialog();
 
+    // open `MyDialogComponent` every time button clicked
+    const handlePushDialog = async () => {
+        const result = await push(MyDialogComponent, { message: 'Pushed Dialog!' });
+        console.log('Pushed dialog closed with result:', result);
+    };
+
+    // open `MyDialogComponent` only once, should registered as in step 1
     const handleOpenDialog = async () => {
-        const result = await open(MyDialogComponent, { message: 'Hello World!' });
-        console.log('Dialog closed with result:', result);
+        const result = await open('registered-dialog-id', { message: 'Opened Dialog!' });
+        console.log('Opened dialog closed with result:', result);
     };
 
     return (
-        <button onClick={handleOpenDialog}>Open Dialog</button>
+        <>
+            <button onClick={handlePushDialog}>Push Dialog</button>
+            <button onClick={handleOpenDialog}>Open Registered Dialog</button>
+        </>
     );
 };
 ```
 
-#### Use `dialogflow` instance 
+#### Using `dialogflow` Instance 
 
+You can also manage dialogs outside of React components using the `dialogflow` instance.
 
 ```tsx
-// SomeComponent.tsx
-import React from 'react';
+// someModule.ts
 import { dialogflow } from './dialogflow';
+import MyDialogComponent from './MyDialogComponent';
 
-export default function SomeComponent() {
+export async function showDialog() {
+    const result = await dialogflow.push(MyDialogComponent, { message: 'Dialog from module!' });
+    console.log('Dialog closed with result:', result);
+}
 
-    const handleOpenDialog = async () => {
-        const result = await dialogflow.open(MyDialogComponent, { message: 'Hello World!' });
-        console.log('Dialog closed with result:', result);
-    };
-
-    return (
-        <button onClick={handleOpenDialog}>Open Dialog</button>
-    );
-};
+export async function openRegisteredDialog() {
+    const result = await dialogflow.open('registered-dialog-id', { message: 'Registered Dialog!' });
+    console.log('Registered dialog closed with result:', result);
+}
 ```
 
 ## API Overview
@@ -172,7 +184,6 @@ import { createDialogflow } from 'dialogflow-react';
 const dialogflow = createDialogflow();
 ```
 
-
 ### `DialogProvider`
 
 A provider component that supplies dialog management functionalities via context.
@@ -183,39 +194,38 @@ A provider component that supplies dialog management functionalities via context
 </DialogProvider>
 ```
 
-
 - **Props:**
   - `manager`: The dialog manager instance created by `createDialogflow`.
 
 ### `useDialog`
 
-A hook that provides `open` and `close` functions to manage dialogs.
+A hook that provides `push`, `open`, and `close` functions to manage dialogs.
 
 ```ts
-const { open, close } = useDialog();
+const { push, open, close } = useDialog();
 ```
 
+- **`push(Component, props?)`**
 
-- **`open(Component, props?)`**
-
-  Opens a dialog component.
+  Pushes a new dialog component onto the stack.
 
   - `Component`: The dialog component to render.
   - `props` (optional): Props to pass to the dialog component.
 
   Returns a promise that resolves to the result passed to `close`.
 
-- **`close(result?)`**
+- **`open(dialogId, props?)`**
 
-  Closes the dialog and resolves the promise returned by `open`.
+  Opens a registered dialog component.
 
-  - `result` (optional): The result to pass back to the caller of `open`.
+  - `dialogId`: The ID of the registered dialog component.
+  - `props` (optional): Props to pass to the dialog component.
+
+  Returns a promise that resolves to the result passed to `close`. Throws an error if the dialog is not registered or is already open.
 
 ## TypeScript Support
 
 `dialogflow-react` is built with TypeScript, providing full type safety and autocompletion in compatible editors.
-
-
 
 ## Contributing
 
@@ -240,24 +250,31 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-
 ## Frequently Asked Questions
 
-### What happens if I try to open multiple dialogs at once?
+### What's the difference between `push` and `open`?
 
-The dialog manager maintains a single dialog state. Opening a new dialog while one is already open will replace the current dialog. If you need to handle multiple dialogs or a dialog stack, you may need to extend the dialog manager or manage dialog stacks in your application.
+`push` is used to add a new dialog to the stack without any prior registration. `open` is used to display a dialog that has been previously registered with a unique ID.
+
+### Can I use `push` and `open` outside of React components?
+
+Yes, you can use both `push` and `open` outside of React components by directly calling them on the `dialogflow` instance created with `createDialogflow()`.
+
+### How do I register a dialog for use with `open`?
+
+Use the `register` method on the `dialogflow` instance:
+
+```ts
+dialogflow.register(MyDialogComponent, 'my-dialog-id');
+```
+
+### What happens if I try to open a dialog that's already open?
+
+The `open` function will ignore new dialog that's already open.
 
 ### Can I pass functions in the dialog props?
 
-Yes, you can pass any valid React props, including functions, to the dialog component via the `props` parameter of the `open` function.
-
-```tsx
-// Passing functions to the dialog
-open(MyDialogComponent, {
-onCustomEvent: handleCustomEvent,
-});
-```
-
+Yes, you can pass any valid React props, including functions, to the dialog component via the `props` parameter of both `push` and `open` functions.
 
 ### How do I handle errors within the dialog?
 
