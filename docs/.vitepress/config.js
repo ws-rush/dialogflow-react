@@ -6,7 +6,7 @@ export default {
 
   themeConfig: {
     siteTitle: "Dialogflow React",
-    logo: "../assets/logo.svg",
+    logo: "/logo.svg",
 
     // nav: nav(),
 

@@ -6,7 +6,7 @@ hero:
   # text: "app text"
   tagline: "A lightweight and flexible React library for managing dialogs and modals in your react-dom and react-native applications."
   image:
-    src: ./assets/logo.svg
+    src: /logo.svg
     width: 140
     alt: Dialogflow React
   actions:
