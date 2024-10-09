@@ -1,4 +1,4 @@
-import React, { type ReactNode, useMemo, useSyncExternalStore } from 'react'
+import { type ReactNode, useMemo, useSyncExternalStore } from 'react'
 import { Manager } from './DialogManager'
 import { DialogContext } from './DialogContext'
 
