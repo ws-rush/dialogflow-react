@@ -1,12 +1,13 @@
 {
   "name": "dialogflow-react",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist"
   ],
   "main": "./dist/dialogflow-react.umd.cjs",
   "module": "./dist/dialogflow-react.js",
+  "types": "./dist/dialogflow-react.d.ts",
   "exports": {
     "import": "./dist/dialogflow-react.js",
     "require": "./dist/dialogflow-react.umd.cjs"
