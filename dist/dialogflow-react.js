@@ -17,8 +17,10 @@ function P() {
   const t = /* @__PURE__ */ new Map(), e = v({
     dialogs: []
   }), r = (o, s) => {
-    t.has(s) && console.warn(`Dialog with ID "${s}" is already registered. Overwriting.`), t.set(s, o);
-  }, a = (o, s = {}) => {
+    t.has(s) && console.warn(
+      `Dialog with ID "${s}" is already registered. Overwriting.`
+    ), t.set(s, o);
+  }, a = (o, s) => {
     const n = `dialog_${l++}`;
     return new Promise((i) => {
       const p = {
@@ -34,10 +36,12 @@ function P() {
       }, { dialogs: c } = e.getSnapshot();
       e.setState({ dialogs: [...c, p] });
     });
-  }, d = (o, s = {}) => {
+  }, d = (o, s) => {
     const n = t.get(o);
     if (!n)
-      return Promise.reject(new Error(`No dialog registered with ID "${o}".`));
+      return Promise.reject(
+        new Error(`No dialog registered with ID "${o}".`)
+      );
     const { dialogs: i } = e.getSnapshot();
     return i.some((c) => c.id === o) ? Promise.resolve() : new Promise((c) => {
       const g = {

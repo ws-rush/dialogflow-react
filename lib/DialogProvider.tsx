@@ -1,6 +1,6 @@
 import { type ReactNode, useMemo, useSyncExternalStore } from 'react'
-import { Manager } from './DialogManager'
-import { DialogContext } from './DialogContext'
+import type { Manager } from './DialogManager'
+import { DialogContext, type DialogContextType } from './DialogContext'
 
 export type Props = {
   readonly children: ReactNode
@@ -10,7 +10,7 @@ export type Props = {
 export function DialogProvider({ children, manager }: Props): JSX.Element {
   const { dialogs } = useSyncExternalStore(manager.subscribe, manager.getSnapshot, manager.getSnapshot)
 
-  const actions = useMemo(() => ({ open: manager.open, push: manager.push }), [manager.open, manager.push])
+  const actions: DialogContextType = useMemo(() => ({ open: manager.open, push: manager.push }), [manager.open, manager.push])
 
   return (
     <DialogContext.Provider value={actions}>
