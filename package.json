@@ -1,6 +1,8 @@
 {
   "name": "dialogflow-react",
-  "version": "0.0.13",
+  "version": "0.0.14",
+  "license": "MIT",
+  "homepage": "https://dialogflow-react.netlify.app",
   "type": "module",
   "files": [
     "dist"
