@@ -5,8 +5,17 @@ export default {
   description: "Just playing around.",
 
   themeConfig: {
-    siteTitle: "Dialogflow React",
     logo: "/logo.svg",
+    siteTitle: "Dialogflow React",
+
+    search: {
+      provider: 'local',
+    },
+
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/ws-rush/dialogflow-react' },
+      // { icon: 'twitter', link: 'https://twitter.com/ws_rushx' },
+    ],
 
     // nav: nav(),
 
@@ -23,7 +32,7 @@ export default {
 
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright © 2024",
+      copyright: "Copyright © 2024 <a href='https://wusaby.com' target='_blank'>Rushied Qaied.</a>",
     },
   },
 };
